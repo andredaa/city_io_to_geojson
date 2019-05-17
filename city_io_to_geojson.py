@@ -114,11 +114,11 @@ def convert_data_from_city_io():
 
 
     # save geojsons
-    with open('./resulting_jsons/geo_json_table_' + config['SETTINGS']['LOCAL_EPSG'] + '_projection', 'wb') as f:
+    with open('./resulting_jsons/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json', 'wb') as f:
         json.dump(geo_json_table_local_projection, f)
 
     geo_json_table_global_projection = reproject.reproject_geojson_epsg_to_wgs(geo_json_table_local_projection)
-    with open('./resulting_jsons/geo_json_table_' + config['SETTINGS']['GLOBAL_EPSG'] + '_projection', 'wb') as f:
+    with open('./resulting_jsons/geojson_' + config['SETTINGS']['GLOBAL_EPSG'] + '.json', 'wb') as f:
         json.dump(geo_json_table_global_projection, f)
 
 

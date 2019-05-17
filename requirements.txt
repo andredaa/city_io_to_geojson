@@ -1,0 +1,5 @@
+pyshp
+geomet
+psycopg2
+numpy
+requests

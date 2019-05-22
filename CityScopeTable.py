@@ -7,7 +7,8 @@ import json
 import urllib
 import math
 import os
-from reproject import reproject_point_to_hamburg_epsg
+import configparser
+from reproject import reproject_point
 
 
 class CityScopeTable:
@@ -18,7 +19,7 @@ class CityScopeTable:
         self.table_flipped = table_flipped
 
         try:
-            self.result = json.load(urllib.urlopen(self.address))
+           # self.result = json.load(urllib.urlopen(self.address))
             # Temporary fix, as longitude and latitude are falsely swapped at the endpoint
             # self.start_cell_origin = (Point(self.result['header']['spatial']['longitude'], self.result['header']['spatial']['latitude']))
             self.start_cell_origin = (Point(self.result['header']['spatial']['latitude'], self.result['header']['spatial']['longitude']))
@@ -37,10 +38,17 @@ class CityScopeTable:
         self.table_mapping = self.result['header']['mapping']['type']
         # todo enter mapping to get street id
 
+        # get projections from config.ini
+        config = configparser.ConfigParser()
+        config.read('config.ini')
+        self.origin_epsg = config['SETTINGS']['ORIGIN_EPSG']
+        self.local_epsg = config['SETTINGS']['LOCAL_EPSG']
+
+
     def get_result(self):
         return self.result
 
-    def get_start_cell_origin_epsg(self):
+    def get_projected_start_cell_origin(self):
         origin = self.get_reprojected_origin()
         if not self.table_flipped:
             return origin
@@ -67,7 +75,8 @@ class CityScopeTable:
         return self.table_mapping
 
     def get_reprojected_origin(self):
-        origin_x, origin_y = reproject_point_to_hamburg_epsg([self.start_cell_origin.x, self.start_cell_origin.y])
+        point = [self.start_cell_origin.x, self.start_cell_origin.y]
+        origin_x, origin_y = reproject_point(self.origin_epsg, self.local_epsg, point)
 
         return Point(origin_x, origin_y)
 

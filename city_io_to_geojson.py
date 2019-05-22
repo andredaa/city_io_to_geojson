@@ -19,7 +19,7 @@ def create_grid_of_cells(table):
 
             # get coordinates of the current cell's origin
             if (row == 0 and column == 0):
-                cell_origin = table.get_start_cell_origin_epsg()
+                cell_origin = table.get_projected_start_cell_origin()
             # in highest row of grid - move towards the right
             elif (row == 0 and column != 0):
                 cell_origin = grid_of_cells[(column - 1)].get_upper_right_corner()
@@ -81,6 +81,7 @@ def create_table_json(grid_of_cells):
             coordinates.append(point)
 
         cell_content = {
+            "type": "Feature",
             "geometry": {
                 "type": "Polygon",
                 "coordinates": [coordinates]
@@ -89,6 +90,7 @@ def create_table_json(grid_of_cells):
                 "id": cell.get_cell_id(),
                 "type": cell.get_cell_type(),
                 "rotation": cell.get_cell_rotation(),
+                "color": "#add8e6"
             },
             "id": cell.get_cell_id()
         }
@@ -117,7 +119,7 @@ def convert_data_from_city_io():
     with open('./resulting_jsons/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json', 'wb') as f:
         json.dump(geo_json_table_local_projection, f)
 
-    geo_json_table_global_projection = reproject.reproject_geojson_epsg_to_wgs(geo_json_table_local_projection)
+    geo_json_table_global_projection = reproject.reproject_geojson_local_to_global(geo_json_table_local_projection)
     with open('./resulting_jsons/geojson_' + config['SETTINGS']['GLOBAL_EPSG'] + '.json', 'wb') as f:
         json.dump(geo_json_table_global_projection, f)
 

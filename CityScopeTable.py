@@ -19,7 +19,7 @@ class CityScopeTable:
         self.table_flipped = table_flipped
 
         try:
-           # self.result = json.load(urllib.urlopen(self.address))
+            self.result = json.load(urllib.urlopen(self.address))
             # Temporary fix, as longitude and latitude are falsely swapped at the endpoint
             # self.start_cell_origin = (Point(self.result['header']['spatial']['longitude'], self.result['header']['spatial']['latitude']))
             self.start_cell_origin = (Point(self.result['header']['spatial']['latitude'], self.result['header']['spatial']['longitude']))

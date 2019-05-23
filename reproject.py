@@ -4,7 +4,7 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read('config.ini')
-global_epsg = config['SETTINGS']['GLOBAL_EPSG']
+global_epsg = config['SETTINGS']['OUTPUT_EPSG']
 local_epsg = config['SETTINGS']['LOCAL_EPSG']
 
 

@@ -5,6 +5,8 @@ import GridCell
 import json
 import configparser
 import reproject
+from shapely.geometry import Polygon, polygon
+from shapely_geojson import dumps, Feature, FeatureCollection
 
 def get_color_for_cell_type(cell_type):
     colors_for_type = {
@@ -14,6 +16,7 @@ def get_color_for_cell_type(cell_type):
         3 : '# e43f0f',# working low
         4 : '# f51476',# working high
         5 : '# 000000',# unknown
+        6 : '# 000000',# unknown
     }
 
     return colors_for_type[cell_type]
@@ -80,36 +83,36 @@ def get_cell_polygon_coord(cell):
 
 
 def create_table_json(grid_of_cells):
-    geo_json = {
-        "type": "FeatureCollection",
-        "features": [
-        ]
-    }
 
+    features = []
     for cell in grid_of_cells:
         # filter out empty or irrelevant cells
         coordinates = []
         for point in get_cell_polygon_coord(cell):
             coordinates.append(point)
 
-        cell_content = {
-            "type": "Feature",
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [coordinates]
-            },
-            "properties": {
-                "id": cell.get_cell_id(),
-                "type": cell.get_cell_type(),
-                "rotation": cell.get_cell_rotation(),
-                "color": get_color_for_cell_type(cell.get_cell_type())
-            },
-            "id": cell.get_cell_id()
-        }
+        cell_polygon = Polygon(coordinates)
+        polygon.orient(cell_polygon)
 
-        geo_json['features'].append(cell_content)
+        feature = Feature(cell_polygon, properties={
+                          "id": cell.get_cell_id(),
+                          "type": cell.get_cell_type(),
+                          "rotation": cell.get_cell_rotation(),
+                          "color": get_color_for_cell_type(cell.get_cell_type())
+                      },
+                  #  TODO is the needed? then add it later
+                  #    id = {cell.get_cell_id()}
+                          )
+        features.append(feature)
 
-    return geo_json
+       # print(dumps(feature, indent= 2))
+       #  exit()
+
+  #  print(type({dumps(FeatureCollection(features))}))
+   # print({dumps(FeatureCollection(features))})
+    #exit()
+
+    return dumps(FeatureCollection(features), indent=2)
 
 
 # collects the data from city io, transforms into a geojson and saves that geojson as input for the noise calculation
@@ -125,7 +128,6 @@ def convert_data_from_city_io():
     table = CityScopeTable.CityScopeTable(city_scope_address, table_flipped)
     grid_of_cells = create_grid_of_cells(table)
     geo_json_table_local_projection = create_table_json(grid_of_cells)
-
 
     # save geojsons
     with open('./resulting_jsons/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json', 'wb') as f:

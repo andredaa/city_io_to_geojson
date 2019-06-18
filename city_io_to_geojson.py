@@ -14,6 +14,7 @@ def get_color_for_cell_type(cell_type):
         3 : '# e43f0f',# working low
         4 : '# f51476',# working high
         5 : '# 000000',# unknown
+        6 : '# 000000',# unknown
     }
 
     return colors_for_type[cell_type]
@@ -52,7 +53,7 @@ def create_grid_of_cells(table):
 
     return grid_of_cells
 
-
+# order of coordinates following right hand rule
 def get_cell_polygon_coord(cell):
     return [
         [
@@ -60,16 +61,16 @@ def get_cell_polygon_coord(cell):
             cell.get_origin().y
         ],
         [
-            cell.get_upper_right_corner().x,
-            cell.get_upper_right_corner().y
+            cell.get_lower_left_corner().x,
+            cell.get_lower_left_corner().y
         ],
         [
             cell.get_lower_right_corner().x,
             cell.get_lower_right_corner().y
         ],
         [
-            cell.get_lower_left_corner().x,
-            cell.get_lower_left_corner().y
+            cell.get_upper_right_corner().x,
+            cell.get_upper_right_corner().y
         ],
         # coordinates of a polygon need to form a closed linestring
         [

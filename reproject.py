@@ -1,9 +1,11 @@
 import pyproj
 import json
 import configparser
+import os
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+file_path = dir_path = os.path.dirname(os.path.realpath(__file__))
+config.read(file_path + '/config.ini')
 global_epsg = config['SETTINGS']['OUTPUT_EPSG']
 local_epsg = config['SETTINGS']['LOCAL_EPSG']
 

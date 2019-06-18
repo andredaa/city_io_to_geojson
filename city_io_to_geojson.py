@@ -137,6 +137,14 @@ def convert_data_from_city_io():
         json.dump(geo_json_table_global_projection, f)
 
 
+def get_data_from_city_io():
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    convert_data_from_city_io()
+
+    return json.load('./resulting_jsons/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json')
+
+
 if __name__ == "__main__":
     # execute only if run as a script
     convert_data_from_city_io()

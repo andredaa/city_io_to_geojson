@@ -2014,10 +2014,10 @@
     "spatial": {
       "physical_longitude": 10.015731,
       "cellSize": 16,
-      "longitude": 36.81667,
+      "longitude": 10.015731,
       "rotation": 325,
       "nrows": 10,
-      "latitude": -1.28333,
+      "latitude": 53.530482,
       "ncols": 10,
       "physical_latitude": 53.530482
     },

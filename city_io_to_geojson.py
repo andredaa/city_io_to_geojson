@@ -5,20 +5,7 @@ import GridCell
 import json
 import configparser
 import reproject
-
-def get_color_for_cell_type(cell_type):
-    colors_for_type = {
-        0 : '#373f51', #street
-        1 : '#002dd5',#residential low
-        2 : '#008dd5',#residential high
-        3 : '#e43f0f',#working low
-        4 : '#f51476',#working high
-        5 : '#000000',#unknown
-        6 : '#000000',# unknown
-    }
-
-    return colors_for_type[cell_type]
-
+import project_properties
 
 def create_grid_of_cells(table):
     # create a list of GridCell objects for all cells in grid
@@ -103,7 +90,9 @@ def create_table_json(grid_of_cells):
                 "id": cell.get_cell_id(),
                 "type": cell.get_cell_type(),
                 "rotation": cell.get_cell_rotation(),
-                "color": get_color_for_cell_type(cell.get_cell_type())
+                "color": project_properties.get_color_for_cell_type(cell.get_cell_type()),
+                "base_height": project_properties.get_base_height_for_cell_type(cell.get_cell_type()),
+                "height": project_properties.get_height_for_cell_type(cell.get_cell_type())
             },
             "id": cell.get_cell_id()
         }

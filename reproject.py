@@ -43,7 +43,7 @@ def reproject_point_global_to_local(point):
 
     return projected_x, projected_y
 
-
+# receives a geojson, reprojects it and returns the reprojected geojson
 def reproject_geojson_local_to_global(geojson):
     features = geojson['features']
 
@@ -58,7 +58,6 @@ def reproject_geojson_local_to_global(geojson):
 
     projected_features = features
     geojson['features'] = projected_features
-    #print(geojson)
 
     return geojson
 

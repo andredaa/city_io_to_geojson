@@ -7,13 +7,14 @@ import configparser
 import reproject
 import project_properties
 
+
 def create_grid_of_cells(table):
     # create a list of GridCell objects for all cells in grid
     grid_of_cells = []
     for row in range(table.get_table_row_count()):
         for column in range(table.get_table_column_count()):
             cell_id = row * table.get_table_column_count() + column
-            cell_content = table.get_result()['grid'][cell_id]
+            cell_content = [1, 1]
             cell_type = cell_content[0]
             cell_rotation = cell_content[1]
 
@@ -39,6 +40,7 @@ def create_grid_of_cells(table):
             grid_of_cells.append(cell)
 
     return grid_of_cells
+
 
 # order of coordinates following right hand rule
 def get_cell_polygon_coord(cell):

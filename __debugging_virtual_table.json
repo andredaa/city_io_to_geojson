@@ -2014,11 +2014,11 @@
     "spatial": {
       "physical_longitude": 10.015731,
       "cellSize": 16,
-      "longitude": 10.015731,
+      "longitude": 10.00677491086256,
       "rotation": 325,
-      "nrows": 10,
-      "latitude": 53.530482,
-      "ncols": 10,
+      "nrows": 44,
+      "latitude": 53.53789434597681,
+      "ncols": 78,
       "physical_latitude": 53.530482
     },
     "name": "virtual_table",

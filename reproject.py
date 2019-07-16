@@ -30,6 +30,7 @@ def reproject_point(current_epsg, new_epsg, point):
 
     return projected_x, projected_y
 
+
 # reprojects a point to WGS84
 def reproject_point_local_to_global(point):
     projected_x, projected_y = reproject_point(local_epsg, global_epsg, point)
@@ -42,6 +43,7 @@ def reproject_point_global_to_local(point):
     projected_x, projected_y = reproject_point(global_epsg, local_epsg, point)
 
     return projected_x, projected_y
+
 
 # receives a geojson, reprojects it and returns the reprojected geojson
 def reproject_geojson_local_to_global(geojson):

@@ -17,9 +17,10 @@ class CityScopeTable:
     def __init__(self, address, table_flipped):
         self.address = address
         self.table_flipped = table_flipped
-
+        # self.table_extends = config
         try:
-            self.result = json.load(urllib.urlopen(self.address))
+            # TODO kann alles raus, wir burachen nur die geo infos
+            #self.result = json.load(urllib.urlopen(self.address))
             # Temporary fix, as longitude and latitude are falsely swapped at the endpoint
             # self.start_cell_origin = (Point(self.result['header']['spatial']['longitude'], self.result['header']['spatial']['latitude']))
             self.start_cell_origin = (Point(self.result['header']['spatial']['latitude'], self.result['header']['spatial']['longitude']))

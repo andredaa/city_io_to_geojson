@@ -105,16 +105,12 @@ def create_table_json(grid_of_cells):
 
 
 # collects the data from city io, transforms into a geojson and saves that geojson as input for the noise calculation
-def convert_data_from_city_io():
+def create_table():
     config = configparser.ConfigParser()
     config.read('config.ini')
 
-    city_scope_address = config['CITY_SCOPE']['TABLE_URL_INPUT']
-    # if the table origin is flipped to teh southeast, instead of regular northwest
-    table_flipped = config['CITY_SCOPE'].getboolean('TABLE_FLIPPED')
-
     # dynamic input data from designer
-    table = CityScopeTable.CityScopeTable(city_scope_address, table_flipped)
+    table = CityScopeTable.CityScopeTable()
     grid_of_cells = create_grid_of_cells(table)
     geo_json_table_local_projection = create_table_json(grid_of_cells)
 
@@ -131,11 +127,11 @@ def convert_data_from_city_io():
 def get_data_from_city_io():
     config = configparser.ConfigParser()
     config.read('config.ini')
-    convert_data_from_city_io()
+    create_table()
 
     return json.load('./resulting_jsons/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json')
 
 
 if __name__ == "__main__":
     # execute only if run as a script
-    convert_data_from_city_io()
+    create_table()

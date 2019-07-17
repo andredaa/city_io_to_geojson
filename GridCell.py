@@ -9,13 +9,11 @@ from shapely.geometry import Point, Polygon
 class GridCell:
     # defining constructor
     # origin is the upper left corner
-    def __init__(self, origin, table_rotation, cell_size, cell_id, cell_type, cell_rotation):
+    def __init__(self, origin, table_rotation, cell_size, cell_id):
         self.origin = origin
         self.table_rotation = table_rotation
         self.cell_size = cell_size
         self.cell_id = cell_id
-        self.cell_type = cell_type
-        self.cell_rotation = cell_rotation
 
         # defining class methods
     def get_origin(self):
@@ -29,12 +27,6 @@ class GridCell:
 
     def get_cell_id(self):
             return self.cell_id
-
-    def get_cell_type(self):
-            return self.cell_type
-
-    def get_cell_rotation(self):
-            return self.cell_rotation
 
     def get_upper_right_corner(self):
          return self.get_cell_corner(90)

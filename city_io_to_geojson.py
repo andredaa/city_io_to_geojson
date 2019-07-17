@@ -5,7 +5,6 @@ import GridCell
 import json
 import configparser
 import reproject
-import project_properties
 
 
 def create_grid_of_cells(table):
@@ -14,9 +13,6 @@ def create_grid_of_cells(table):
     for row in range(table.get_table_row_count()):
         for column in range(table.get_table_column_count()):
             cell_id = row * table.get_table_column_count() + column
-            cell_content = [1, 1]
-            cell_type = cell_content[0]
-            cell_rotation = cell_content[1]
 
             # get coordinates of the current cell's origin
             if (row == 0 and column == 0):
@@ -33,8 +29,6 @@ def create_grid_of_cells(table):
                 table.get_table_rotation(),
                 table.get_table_cell_size(),
                 cell_id,
-                cell_type,
-                cell_rotation,
             )
 
             grid_of_cells.append(cell)
@@ -90,11 +84,6 @@ def create_table_json(grid_of_cells):
             },
             "properties": {
                 "id": cell.get_cell_id(),
-                "type": cell.get_cell_type(),
-                "rotation": cell.get_cell_rotation(),
-                "color": project_properties.get_color_for_cell_type(cell.get_cell_type()),
-                "base_height": project_properties.get_base_height_for_cell_type(cell.get_cell_type()),
-                "height": project_properties.get_height_for_cell_type(cell.get_cell_type())
             },
             "id": cell.get_cell_id()
         }

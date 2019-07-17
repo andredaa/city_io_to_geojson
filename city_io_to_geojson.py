@@ -7,7 +7,7 @@ import configparser
 import reproject
 
 
-def create_grid_of_cells(table):
+def create_grid_of_outer_cells(table):
     # create a list of GridCell objects for all cells in grid
     grid_of_cells = []
     for row in range(table.get_table_row_count()):
@@ -34,6 +34,35 @@ def create_grid_of_cells(table):
             grid_of_cells.append(cell)
 
     return grid_of_cells
+
+
+def create_grid_of_inner_cells(grid_of_outer_cells, margin):
+    # create a list of GridCell objects for all cells in grid
+    grid_of_inner_cells = []
+    for outer_cell in grid_of_outer_cells:
+            cell_id = outer_cell.cell_id
+
+            # get coordinates of the current cell's origin
+        #    if (row == 0 and column == 0):
+         #       cell_origin = table.get_projected_start_cell_origin()
+            # in highest row of grid - move towards the right
+        #    elif (row == 0 and column != 0):
+        #        cell_origin = grid_of_inner_cells[(column - 1)].get_upper_right_corner()
+            # the origin of the cell is always the equal to the lower left corner of the cell above
+
+            cell_origin = outer_cell.get_inner_square_origin(margin)
+
+            cell = GridCell.GridCell(
+                cell_origin,
+                outer_cell.get_table_rotation(),
+                outer_cell.get_cell_size() - (2 * margin),
+                cell_id,
+                margin
+            )
+
+            grid_of_inner_cells.append(cell)
+
+    return grid_of_inner_cells
 
 
 # order of coordinates following right hand rule
@@ -98,6 +127,8 @@ def create_table_json(grid_of_cells):
     return geo_json
 
 
+
+
 # collects the data from city io, transforms into a geojson and saves that geojson as input for the noise calculation
 def create_table():
     config = configparser.ConfigParser()
@@ -105,17 +136,28 @@ def create_table():
 
     # dynamic input data from designer
     table = CityScopeTable.CityScopeTable()
-    grid_of_cells = create_grid_of_cells(table)
-    geo_json_table_local_projection = create_table_json(grid_of_cells)
+    grid_of_outer_cells = create_grid_of_outer_cells(table)
+    grid_of_inner_cells = create_grid_of_inner_cells(grid_of_outer_cells, 2)
 
+    geo_json_table_local_projection = create_table_json(grid_of_outer_cells)
+    geo_json_inner_cells = create_table_json(grid_of_inner_cells)
 
     # save geojsons
-    with open('./resulting_jsons/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json', 'wb') as f:
+    # outer cells
+    with open('./resulting_jsons/outer_cells/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json', 'wb') as f:
         json.dump(geo_json_table_local_projection, f)
 
     geo_json_table_global_projection = reproject.reproject_geojson_local_to_global(geo_json_table_local_projection)
-    with open('./resulting_jsons/geojson_' + config['SETTINGS']['OUTPUT_EPSG'] + '.json', 'wb') as f:
+    with open('./resulting_jsons/outer_cells/geojson_' + config['SETTINGS']['OUTPUT_EPSG'] + '.json', 'wb') as f:
         json.dump(geo_json_table_global_projection, f)
+
+    # inner cells
+    with open('./resulting_jsons/inner_cells/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json', 'wb') as f:
+        json.dump(geo_json_inner_cells, f)
+
+    geo_json_inner_cells_global_projection = reproject.reproject_geojson_local_to_global(geo_json_inner_cells)
+    with open('./resulting_jsons/inner_cells/geojson_' + config['SETTINGS']['OUTPUT_EPSG'] + '.json', 'wb') as f:
+        json.dump(geo_json_inner_cells_global_projection, f)
 
 
 def get_data_from_config():

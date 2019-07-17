@@ -84,6 +84,11 @@ def create_table_json(grid_of_cells):
             },
             "properties": {
                 "id": cell.get_cell_id(),
+                "type": 0,
+                "rotation": cell.get_table_rotation(),
+                "color": '#000000',
+                "base_height": 0,
+                "height": 0
             },
             "id": cell.get_cell_id()
         }

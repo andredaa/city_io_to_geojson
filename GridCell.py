@@ -52,13 +52,11 @@ class GridCell:
 
         return self.get_point_in_distance(distance, angle)
 
-
     # gets the origin of a smaller square inside the cell - with a given margin to the bounding cells walls
     def get_inner_square_origin(self, margin):
         distance_from_outer_cell_orgin = margin * math.sqrt(2)
 
-        # TODO: Figure out if there is an alternative to negative distance and 360-45 degree
-        return self.get_point_in_distance(-distance_from_outer_cell_orgin, (360-45))
+        return self.get_point_in_distance(distance_from_outer_cell_orgin, 45)
 
     # returns a Point located in a given distance and angle from the cell_origin. Considers table rotation.
     def get_point_in_distance(self, distance, angle):

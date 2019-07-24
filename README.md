@@ -25,13 +25,13 @@ The geojson is containing only the coordinates and nulled properties for each gr
 Properties can for each gridcell shall be updated through cityIO.
 
 ### Set your parameters in the config.ini
-####*[SETTINGS]*  
+#### *[SETTINGS]*  
 _ORIGIN_EPSG_: Coordinate reference system of ORIGIN_LONGITUDE AND ORIGIN_LATITUDE  
 _LOCAL_EPSG_ = Local metric coordinate reference system, e.g. Hamburg 'EPSG:25832' 
     - Find your local EPSG here : https://epsg.io   
 _OUTPUT_EPSG_ = Desired output coordinate reference system, e.g. 'EPSG:4326' for worldwide longitude, latitude
 
-####*[CITY_SCOPE]*  
+#### *[CITY_SCOPE]*  
 _TABLE_FLIPPED_: yes|no
   - The table origin should be in the NorthWest corner of the table. In case the table is flipped,
 and the origin specified is in the SouthWest corner, specify a 'yes' here. Default: no  

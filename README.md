@@ -3,7 +3,10 @@
 ## On the fly generation of projected CityIO grids 
 Open the config.ini and enter your table specifications.
 Execute _python city_io_to_geojson.py_ (Python 2.7).
-Find resulting geojsons in the ./resulting_jsons folder.
+Find resulting geojsons in the ./resulting_jsons folder.  
+2 result sets will be generated  
+a) ./resulting_jsons/outer_cells will contain the gridcells with coordinates of the true cell corners, using cellsize.  
+b) ./resultings_jsons/inner_cells will contain 'inner' gridcells with margins towards the cells' centers.  
 True gridcell sizes and locations will be maintained in any projection.
 
 
@@ -45,10 +48,12 @@ _TABLE_COLS_: Count of columns on table
 
 
 ### Examples of generated results
-####Nairobi
+#### Nairobi
 ![Nairobi](example_results/nairobi.png)
-####Reykjavik
+#### Reykjavik
 ![Reykjavik](example_results/reykjavik.png)
-####Hamburg
+#### Hamburg
 ![Hamburg](example_results/hamburg.png)
+#### Hamburg with cell margins 
+![Hamburg](example_results/hamburg-cell-margins.png)
 

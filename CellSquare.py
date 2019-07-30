@@ -5,7 +5,7 @@ import math
 import geometry
 
 
-class Cell:
+class CellSquare:
     # defining constructor
     # origin is the upper left corner
 
@@ -51,7 +51,7 @@ class Cell:
         return geometry.get_point_in_distance(self.get_origin(), distance, angle, self.get_table_rotation())
 
     # order of coordinates following right hand rule
-    def get_cell_polygon_coord(self):
+    def get_polygon_coord(self):
         return [
             [
                 self.get_origin().x,

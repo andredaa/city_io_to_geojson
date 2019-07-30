@@ -95,7 +95,7 @@ def create_geo_json(grid_of_cells, inner_cells=False):
 
         # create list of coordinates for cell
         coordinates = []
-        for point in cell.get_cell_polygon_coord():
+        for point in cell.get_polygon_coord():
             coordinates.append(point)
 
         cell_content = {

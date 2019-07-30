@@ -27,6 +27,7 @@ class CityScopeTable:
         print(start_cell_origin_longitude, start_cell_origin_latitude)
         self.start_cell_origin = Point(start_cell_origin_longitude, start_cell_origin_latitude)
         self.table_cell_size = config['CITY_SCOPE'].getint('CELL_SIZE')
+        self.table_cell_margin = config['CITY_SCOPE'].getint('CELL_MARGIN')
         self.table_row_count = config['CITY_SCOPE'].getint('TABLE_ROWS')
         self.table_column_count = config['CITY_SCOPE'].getint('TABLE_COLS')
         self.origin_epsg = config['SETTINGS']['ORIGIN_EPSG']
@@ -46,6 +47,9 @@ class CityScopeTable:
 
     def get_table_cell_size(self):
         return self.table_cell_size
+
+    def get_table_cell_margin(self):
+        return self.table_cell_margin
 
     def get_table_row_count(self):
         return self.table_row_count

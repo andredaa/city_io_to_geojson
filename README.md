@@ -55,5 +55,5 @@ _TABLE_COLS_: Count of columns on table
 #### Hamburg
 ![Hamburg](example_results/hamburg.png)
 #### Hamburg with cell margins 
-![Hamburg](example_results/hamburg-cell-margins.png)
+![Hamburg](example_results/cells_with_margins.png)
 

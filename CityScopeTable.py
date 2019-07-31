@@ -33,7 +33,6 @@ class CityScopeTable:
         self.origin_epsg = config['SETTINGS']['ORIGIN_EPSG']
         self.local_epsg = config['SETTINGS']['LOCAL_EPSG']
 
-
     def get_projected_start_cell_origin(self):
         origin_metric_coords = self.get_reprojected_origin()
         if not self.table_flipped:

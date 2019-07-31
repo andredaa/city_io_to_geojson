@@ -22,8 +22,7 @@ class GridCell:
         self.inner_cell = self.create_inner_cell()
         self.margins = self.create_margins()
 
-        # defining class methods
-
+# defining class getters
     def get_origin(self):
         return self.origin
 
@@ -33,9 +32,16 @@ class GridCell:
     def get_inner_cell(self):
         return self.inner_cell
 
+    def get_margins(self):
+        return self.margins
+
+    def get_cell_id(self):
+        return self.cell_id
+
     def get_table_rotation(self):
         return self.table_rotation
 
+# private class methods
     def create_outer_cell(self):
         return CellSquare.CellSquare(self.get_origin(), self.table_rotation, self.cell_size, self.cell_id)
 
@@ -66,7 +72,7 @@ class GridCell:
             0: {
                 'upper_left': self.get_outer_cell().get_origin(),
                 'upper_right': self.get_outer_cell().get_upper_right_corner(),
-                'lower_right': self.get_inner_cell().get_lower_right_corner(),
+                'lower_right': self.get_inner_cell().get_upper_right_corner(),
                 'lower_left': self.get_inner_cell().get_origin()
             },
             # right hand side of the grid cell

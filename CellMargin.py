@@ -21,26 +21,26 @@ class CellMargin:
     def get_upper_left_corner(self):
         return self.upper_left
 
-    def get_upper_right_corner(self):
-        return self.upper_right(90)
+    def get_upper_right(self):
+        return self.upper_right
 
     def get_lower_right_corner(self):
-        return self.lower_right(135)
+        return self.lower_right
 
     def get_lower_left_corner(self):
-        return self.lower_left(180)
+        return self.lower_left
 
     def get_cell_id(self):
         return self.cell_id
 
     def get_margin_id(self):
-        return self.cell_id
+        return self.margin_id
 
     def get_polygon_coord(self):
         return [
             [
-                self.upper_left().x,
-                self.upper_left().y
+                self.get_upper_left_corner().x,
+                self.get_upper_left_corner().y
             ],
             [
                 self.get_lower_left_corner().x,
@@ -51,13 +51,13 @@ class CellMargin:
                 self.get_lower_right_corner().y
             ],
             [
-                self.get_upper_right_corner().x,
-                self.get_upper_right_corner().y
+                self.get_upper_right().x,
+                self.get_upper_right().y
             ],
             # coordinates of a polygon need to form a closed linestring
             [
-                self.upper_left().x,
-                self.upper_left().y
+                self.get_upper_left_corner().x,
+                self.get_upper_left_corner().y
             ],
         ]
 

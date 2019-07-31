@@ -25,40 +25,16 @@ def create_table():
     table = CityScopeTable.CityScopeTable()
     grid_of_cells = create_grid_of_cells(table)
 
-    # filter grid of cells for subgrids
-    grid_of_outer_cells = get_grid_of_outer_cells(grid_of_cells)
-    grid_of_inner_cells = get_grid_of_inner_cells(grid_of_cells)
-    grid_of_margins = get_grid_of_margins(grid_of_cells)
-
-    # create geojsons
-    geo_json_outer_cells = create_geo_json_for_cells(grid_of_outer_cells)
-    geo_json_inner_cells = create_geo_json_for_cells(grid_of_inner_cells)
-    geo_json_cell_margins = create_geo_json_for_margins(grid_of_margins, table.get_table_rotation())
+    geo_json = create_geo_json(grid_of_cells)
 
     # save geojsons
     # outer cells
-    with open('./resulting_jsons/outer_cells/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json', 'wb') as f:
-        json.dump(geo_json_outer_cells, f)
+    with open('./resulting_jsons/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json', 'wb') as f:
+        json.dump(geo_json, f)
 
-    geo_json_table_global_projection = reproject.reproject_geojson_local_to_global(geo_json_outer_cells)
-    with open('./resulting_jsons/outer_cells/geojson_' + config['SETTINGS']['OUTPUT_EPSG'] + '.json', 'wb') as f:
-        json.dump(geo_json_table_global_projection, f)
-
-    # inner cells
-    with open('./resulting_jsons/inner_cells/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json', 'wb') as f:
-        json.dump(geo_json_inner_cells, f)
-
-    geo_json_inner_cells_global_projection = reproject.reproject_geojson_local_to_global(geo_json_inner_cells)
-    with open('./resulting_jsons/inner_cells/geojson_' + config['SETTINGS']['OUTPUT_EPSG'] + '.json', 'wb') as f:
-        json.dump(geo_json_inner_cells_global_projection, f)
-
-    # cell margins
-    with open('./resulting_jsons/margins/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json', 'wb') as f:
-        json.dump(geo_json_cell_margins, f)
-
-    geo_json_cell_margins_global_projection = reproject.reproject_geojson_local_to_global(geo_json_cell_margins)
-    with open('./resulting_jsons/margins/geojson_' + config['SETTINGS']['OUTPUT_EPSG'] + '.json', 'wb') as f:
-        json.dump(geo_json_cell_margins_global_projection, f)
+    geo_json_global_projection = reproject.reproject_geojson_local_to_global(geo_json)
+    with open('./resulting_jsons/geojson_' + config['SETTINGS']['OUTPUT_EPSG'] + '.json', 'wb') as f:
+        json.dump(geo_json_global_projection, f)
 
 
 # Creates a grid of GridCells
@@ -94,68 +70,34 @@ def create_grid_of_cells(table):
     return grid_of_cells
 
 
-def get_grid_of_outer_cells(grid_of_cells):
-    grid_of_outer_cells = []
-    for cell in grid_of_cells:
-        outer_cell = cell.get_outer_cell()
-        grid_of_outer_cells.append(outer_cell)
-
-    return grid_of_outer_cells
-
-
-def get_grid_of_inner_cells(grid_of_cells):
-    grid_of_inner_cells = []
+# creates a geojson
+def create_geo_json(grid_of_cells):
+    geo_json = {
+        "type": "FeatureCollection",
+        "features": [
+        ]
+    }
     for cell in grid_of_cells:
         inner_cell = cell.get_inner_cell()
-        grid_of_inner_cells.append(inner_cell)
+        # add inner cells
+        inner_cell_coordinates = []
+        for point in inner_cell.get_polygon_coord():
+            inner_cell_coordinates.append(point)
+        cell_content = get_cell_content(inner_cell_coordinates, cell.get_cell_id(), cell.get_table_rotation())
+        geo_json['features'].append(cell_content)
 
-    return grid_of_inner_cells
-
-
-def get_grid_of_margins(grid_of_cells):
-    grid_of_margins = []
-    for cell in grid_of_cells:
+        # add margins
         margins = cell.get_margins()
         for margin in margins:
-            grid_of_margins.append(margin)
-
-    return grid_of_margins
-
-
-# creates a geojson
-def create_geo_json_for_cells(list_of_cells):
-    geo_json = {
-        "type": "FeatureCollection",
-        "features": [
-        ]
-    }
-    for cell in list_of_cells:
-        # create outer cells geojson
-        cell_coordinates = []
-        for point in cell.get_polygon_coord():
-            cell_coordinates.append(point)
-        cell_content = get_cell_content(cell_coordinates, cell.get_cell_id(), cell.get_table_rotation())
-        geo_json['features'].append(cell_content)
+            margin_coordinates = []
+            for point in margin.get_polygon_coord():
+                margin_coordinates.append(point)
+            margin_content = get_cell_content(margin_coordinates, cell.get_cell_id(), cell.get_table_rotation(),
+                                            margin.get_margin_id())
+            geo_json['features'].append(margin_content)
 
     return geo_json
 
-
-# creates a geojson
-def create_geo_json_for_margins(list_of_margins, table_rotation):
-    geo_json = {
-        "type": "FeatureCollection",
-        "features": [
-        ]
-    }
-    for margin in list_of_margins:
-        # create outer cells geojson
-        cell_coordinates = []
-        for point in margin.get_polygon_coord():
-            cell_coordinates.append(point)
-        cell_content = get_cell_content(cell_coordinates, margin.get_cell_id(), table_rotation, margin.get_margin_id())
-        geo_json['features'].append(cell_content)
-
-    return geo_json
 
 
 def get_cell_content(coordinates, cell_id, rotation, margin_id=None):
@@ -176,7 +118,7 @@ def get_cell_content(coordinates, cell_id, rotation, margin_id=None):
         "id": cell_id
     }
 
-    if margin_id:
+    if margin_id is not None:
         cell_content['properties'].update({"margin_id": margin_id})
 
     return cell_content

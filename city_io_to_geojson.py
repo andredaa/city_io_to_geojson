@@ -29,12 +29,12 @@ def create_table():
 
     # save geojsons
     # outer cells
-    with open('./resulting_jsons/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json', 'wb') as f:
-        json.dump(geo_json, f)
+    with open('./resulting_jsons/geojson_' + 'local_projection' + '.json', 'wb') as f:
+        json.dump(geo_json, f) # , sort_keys=True, indent=4)
 
     geo_json_global_projection = reproject.reproject_geojson_local_to_global(geo_json)
-    with open('./resulting_jsons/geojson_' + config['SETTINGS']['OUTPUT_EPSG'] + '.json', 'wb') as f:
-        json.dump(geo_json_global_projection, f)
+    with open('./resulting_jsons/geojson_' + 'global_projection' + '.json', 'wb') as f:
+        json.dump(geo_json_global_projection, f) # , sort_keys=True, indent=4)
 
 
 # Creates a grid of GridCells
@@ -99,7 +99,6 @@ def create_geo_json(grid_of_cells):
     return geo_json
 
 
-
 def get_cell_content(coordinates, cell_id, rotation, margin_id=None):
     cell_content = {
         "type": "Feature",
@@ -111,7 +110,7 @@ def get_cell_content(coordinates, cell_id, rotation, margin_id=None):
             "id": cell_id,
             "type": 0,
             "rotation": rotation,
-            "color": '#000000',
+            "color": '#FFFFFF',
             "base_height": 0,
             "height": 0
         },
@@ -119,7 +118,7 @@ def get_cell_content(coordinates, cell_id, rotation, margin_id=None):
     }
 
     if margin_id is not None:
-        cell_content['properties'].update({"margin_id": margin_id})
+        cell_content['properties'].update({"margin_id": margin_id, "color": '#000000'})
 
     return cell_content
 

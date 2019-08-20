@@ -25,14 +25,14 @@ def create_table():
     table = CityScopeTable.CityScopeTable()
     grid_of_cells = create_grid_of_cells(table)
 
-    geo_json = create_geo_json(grid_of_cells)
+    geo_json_local_projection = create_geo_json(grid_of_cells)
 
-    # save geojsons
-    # outer cells
-    with open('./resulting_jsons/geojson_' + 'local_projection' + '.json', 'wb') as f:
-        json.dump(geo_json, f) # , sort_keys=True, indent=4)
+    # debugging only: save local geojson
+    # with open('./resulting_jsons/geojson_' + 'local_projection' + '.json', 'wb') as f:
+    #    json.dump(geo_json_local_projection, f) # , sort_keys=True, indent=4)
 
-    geo_json_global_projection = reproject.reproject_geojson_local_to_global(geo_json)
+    # save reprojected geojson
+    geo_json_global_projection = reproject.reproject_geojson_local_to_global(geo_json_local_projection)
     with open('./resulting_jsons/geojson_' + 'global_projection' + '.json', 'wb') as f:
         json.dump(geo_json_global_projection, f) # , sort_keys=True, indent=4)
 

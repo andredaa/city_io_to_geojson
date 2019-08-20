@@ -6,7 +6,7 @@ from shapely.geometry import Point
 import math
 import os
 import configparser
-from reproject import reproject_point
+import pyproj
 
 
 class CityScopeTable:
@@ -55,9 +55,11 @@ class CityScopeTable:
 
     def get_reprojected_origin(self):
         point = [self.start_cell_origin.x, self.start_cell_origin.y]
-        origin_x, origin_y = reproject_point(self.origin_epsg, self.local_epsg, point)
+        city_io_projection = pyproj.Proj("+init=" + self.origin_epsg)
+        local_projection = pyproj.Proj("+init=" + self.local_epsg)
+        projected_x, projected_y = pyproj.transform(city_io_projection, local_projection, point[0], point[1])
 
-        return Point(origin_x, origin_y)
+        return Point(projected_x, projected_y)
 
     # returns the opposite corner of the grid (SE->NW)
     def get_flipped_origin(self, origin_metric_coords):

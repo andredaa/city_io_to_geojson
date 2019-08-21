@@ -2,7 +2,7 @@
 
 ## On the fly generation of projected CityIO grids 
 Open the config.ini and enter your table specifications.
-Execute _python city_io_to_geojson.py_ (Python 2.7).
+Execute _python city_io_to_geojson.py_ (Python 3.6.7).
 Find resulting geojsons in the ./resulting_jsons folder.  
 2 result sets will be generated  
 a) ./resulting_jsons/outer_cells will contain the gridcells with coordinates of the true cell corners, using cellsize.  

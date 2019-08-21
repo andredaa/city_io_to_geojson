@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.6.7
 
 import CityScopeTable
 import GridCell
@@ -33,7 +33,7 @@ def create_table():
 
     # save reprojected geojson
     geo_json_global_projection = reproject.reproject_geojson_local_to_global(geo_json_local_projection)
-    with open('./resulting_jsons/geojson_' + 'global_projection' + '.json', 'wb') as f:
+    with open('./resulting_jsons/geojson_' + 'global_projection' + '.json', 'w', newline='') as f:
         json.dump(geo_json_global_projection, f) # , sort_keys=True, indent=4)
 
 

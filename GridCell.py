@@ -10,9 +10,9 @@ import CellMargin
 class GridCell:
     # defining constructor
     # origin is the upper left corner
-    def __init__(self, origin, table_rotation, cell_size, cell_id, cell_margin=0):
+    def __init__(self, origin, table_rotation_spatial_crs, cell_size, cell_id, cell_margin=0):
         self.origin = origin
-        self.table_rotation = table_rotation
+        self.table_rotation = table_rotation_spatial_crs
         self.cell_size = cell_size
         self.cell_id = cell_id
         self.cell_margin = cell_margin

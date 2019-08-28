@@ -59,7 +59,7 @@ def create_grid_of_cells(table):
 
             grid_cell = GridCell.GridCell(
                 cell_origin,
-                table.get_table_rotation(),
+                table.get_table_rotation_spatial_crs(),
                 table.get_table_cell_size(),
                 cell_id,
                 table.get_table_cell_margin()
@@ -74,6 +74,7 @@ def create_grid_of_cells(table):
 def create_geo_json(grid_of_cells):
     geo_json = {
         "type": "FeatureCollection",
+        # todo put crs crs
         "features": [
         ]
     }
@@ -83,7 +84,7 @@ def create_geo_json(grid_of_cells):
         inner_cell_coordinates = []
         for point in inner_cell.get_polygon_coord():
             inner_cell_coordinates.append(point)
-        cell_content = get_cell_content(inner_cell_coordinates, cell.get_cell_id(), cell.get_table_rotation())
+        cell_content = get_cell_content(inner_cell_coordinates, cell.get_cell_id(), cell.get_table_rotation)
         geo_json['features'].append(cell_content)
 
         # add margins
@@ -92,8 +93,8 @@ def create_geo_json(grid_of_cells):
             margin_coordinates = []
             for point in margin.get_polygon_coord():
                 margin_coordinates.append(point)
-            margin_content = get_cell_content(margin_coordinates, cell.get_cell_id(), cell.get_table_rotation(),
-                                            margin.get_margin_id())
+            margin_content = get_cell_content(margin_coordinates, cell.get_cell_id(), cell.get_table_rotation,
+                                              margin.get_margin_id())
             geo_json['features'].append(margin_content)
 
     return geo_json
@@ -114,7 +115,7 @@ def get_cell_content(coordinates, cell_id, rotation, margin_id=None):
             "base_height": 0,
             "height": 0
         },
-        "id": cell_id
+        "cell_id": cell_id
     }
 
     if margin_id is not None:

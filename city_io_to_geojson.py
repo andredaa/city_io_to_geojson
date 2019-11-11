@@ -5,7 +5,7 @@ import GridCell
 import json
 import configparser
 import reproject
-
+import random
 
 def get_data_from_config():
     config = configparser.ConfigParser()
@@ -84,7 +84,7 @@ def create_geo_json(grid_of_cells):
         inner_cell_coordinates = []
         for point in inner_cell.get_polygon_coord():
             inner_cell_coordinates.append(point)
-        cell_content = get_cell_content(inner_cell_coordinates, cell.get_cell_id(), cell.get_table_rotation)
+        cell_content = get_cell_content(inner_cell_coordinates, cell.get_cell_id(), cell.get_table_rotation())
         geo_json['features'].append(cell_content)
 
         # add margins
@@ -93,7 +93,7 @@ def create_geo_json(grid_of_cells):
             margin_coordinates = []
             for point in margin.get_polygon_coord():
                 margin_coordinates.append(point)
-            margin_content = get_cell_content(margin_coordinates, cell.get_cell_id(), cell.get_table_rotation,
+            margin_content = get_cell_content(margin_coordinates, cell.get_cell_id(), cell.get_table_rotation(),
                                               margin.get_margin_id())
             geo_json['features'].append(margin_content)
 
@@ -123,6 +123,62 @@ def get_cell_content(coordinates, cell_id, rotation, margin_id=None):
 
     return cell_content
 
+
+def get_height(is_margin):
+    if is_margin:
+        return 0
+
+    return random.randrage(5, 100)
+
+
+def get_color(is_margin):
+    if is_margin:
+        return get_color_codes_reds()[random.randrange(len(get_color_codes_reds()))]
+
+    return get_color_codes_blues()[random.randrange(len(get_color_codes_blues()))]
+
+
+def get_color_codes_blues():
+    return [
+        '#E6E6FA',
+        '#B0E0E6',
+        '#ADD8E6',
+        '#87CEFA',
+        '#87CEEB',
+        '#00BFFF',
+        '#B0C4DE',
+        '#1E90FF',
+        '#6495ED',
+        '#4682B4',
+        '#5F9EA0',
+        '#7B68EE',
+        '#6A5ACD',
+        '#483D8B',
+        '#4169E1',
+        '#0000FF',
+        '#0000CD',
+        '#00008B',
+        '#000080',
+        '#191970',
+        '#8A2BE2',
+        '#4B0082',
+    ]
+
+def get_color_codes_reds():
+    return [
+    '#FA8072',
+    '#E9967A',
+    '#F08080',
+    '#CD5C5C',
+    '#DC143C',
+    '#B22222',
+    '#FF0000',
+    '#8B0000',
+    '#800000',
+    '#FF6347',
+    '#FF4500',
+    '#DB7093',
+]
 
 if __name__ == "__main__":
     # execute only if run as a script

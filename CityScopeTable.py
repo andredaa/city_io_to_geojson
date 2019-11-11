@@ -25,7 +25,7 @@ class CityScopeTable:
             'TABLE_ROTATION')  # the table orientation relative to the WGS84
         start_cell_origin_longitude = config['CITY_SCOPE'].getfloat('ORIGIN_LONGITUDE')
         start_cell_origin_latitude = config['CITY_SCOPE'].getfloat('ORIGIN_LATITUDE')
-        print(start_cell_origin_longitude, start_cell_origin_latitude)
+        print("lon, lat", start_cell_origin_longitude, start_cell_origin_latitude)
         self.start_cell_origin = Point(start_cell_origin_longitude, start_cell_origin_latitude)
         self.table_cell_size = config['CITY_SCOPE'].getint('CELL_SIZE')
         self.table_cell_margin = config['CITY_SCOPE'].getint('CELL_MARGIN')
@@ -33,6 +33,7 @@ class CityScopeTable:
         self.table_column_count = config['CITY_SCOPE'].getint('TABLE_COLS')
         self.origin_epsg = config['SETTINGS']['ORIGIN_EPSG']
         self.local_epsg = config['SETTINGS']['LOCAL_EPSG']
+        self.table_rotation_spatial = self.calculate_rotation_metric_crs()
 
     def get_start_cell_origin(self):
         return self.start_cell_origin
@@ -49,8 +50,7 @@ class CityScopeTable:
         return 360 - self.table_rotation_lat_lon
 
     def get_table_rotation_spatial_crs(self):
-        print(self.calculate_rotation_metric_crs())
-        return self.calculate_rotation_metric_crs()
+        return self.table_rotation_spatial
 
     def get_table_cell_size(self):
         return self.table_cell_size

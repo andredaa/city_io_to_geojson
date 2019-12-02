@@ -18,6 +18,7 @@ class CellSquare:
         self.cell_id = cell_id
 
         # defining class methods
+
     def get_origin(self):
         return self.origin
 
@@ -76,4 +77,8 @@ class CellSquare:
             ],
         ]
 
-
+    def get_the_geom(self):
+        return {
+            "type": "Polygon",
+            "coordinates": [self.get_polygon_coord()]
+        }

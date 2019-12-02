@@ -25,9 +25,8 @@ def remove_cells_outside_design_area(grid_of_cells):
     design_grid = []
 
     for cell in grid_of_cells:
-        for point_coords in cell.outer_cell.get_polygon_coord():
-            if design_area.contains(Point(point_coords)):
-                design_grid.append(cell)
+        if design_area.intersects(shape(cell.outer_cell.get_the_geom())):
+            design_grid.append(cell)
 
     return design_grid
 
@@ -95,17 +94,19 @@ def create_geo_json(grid_of_cells):
         ]
     }
     for cell in grid_of_cells:
+        print(cell.cell_id)
         inner_cell = cell.get_inner_cell()
         # add inner cells
         inner_cell_coordinates = []
         for point in inner_cell.get_polygon_coord():
             inner_cell_coordinates.append(point)
-        cell_content = get_cell_content(inner_cell_coordinates, cell.get_cell_id(), cell.get_table_rotation())
+        cell_content = get_cell_content(inner_cell_coordinates, cell.get_cell_id())
         geo_json['features'].append(cell_content)
 
         # add margins
         # if margins
         if cell.cell_margin > 0:
+            print("margin")
             margins = cell.get_margins()
             for margin in margins:
                 margin_coordinates = []

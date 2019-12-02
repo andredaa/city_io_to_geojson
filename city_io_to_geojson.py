@@ -18,9 +18,6 @@ def get_data_from_config():
 # collects the table specs and creates geojsons in local and global projections
 # geojsons containing coordinates are created for the outer_cell, inner_cell and margins of each grid_cell
 def create_table():
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-
     # dynamic input data from designer
     table = CityScopeTable.CityScopeTable()
     grid_of_cells = create_grid_of_cells(table)
@@ -72,6 +69,9 @@ def create_grid_of_cells(table):
 
 # creates a geojson
 def create_geo_json(grid_of_cells):
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+
     geo_json = {
         "type": "FeatureCollection",
         # todo put crs crs
@@ -88,14 +88,16 @@ def create_geo_json(grid_of_cells):
         geo_json['features'].append(cell_content)
 
         # add margins
-        margins = cell.get_margins()
-        for margin in margins:
-            margin_coordinates = []
-            for point in margin.get_polygon_coord():
-                margin_coordinates.append(point)
-            margin_content = get_cell_content(margin_coordinates, cell.get_cell_id(), cell.get_table_rotation(),
-                                              margin.get_margin_id())
-            geo_json['features'].append(margin_content)
+        # if margins
+        if cell.cell_margin > 0:
+            margins = cell.get_margins()
+            for margin in margins:
+                margin_coordinates = []
+                for point in margin.get_polygon_coord():
+                    margin_coordinates.append(point)
+                margin_content = get_cell_content(margin_coordinates, cell.get_cell_id(), cell.get_table_rotation(),
+                                                  margin.get_margin_id())
+                geo_json['features'].append(margin_content)
 
     return geo_json
 

@@ -51,12 +51,14 @@ class GridCell:
 
     # Returns an array of margins
     def create_margins(self):
-        return [
-            CellMargin.CellMargin(self.get_corners_for_margin(0), self.cell_id, 0),
-            CellMargin.CellMargin(self.get_corners_for_margin(1), self.cell_id, 1),
-            CellMargin.CellMargin(self.get_corners_for_margin(2), self.cell_id, 2),
-            CellMargin.CellMargin(self.get_corners_for_margin(3), self.cell_id, 3)
-        ]
+        if self.cell_margin > 0:
+            return [
+                CellMargin.CellMargin(self.get_corners_for_margin(0), self.cell_id, 0),
+                CellMargin.CellMargin(self.get_corners_for_margin(1), self.cell_id, 1),
+                CellMargin.CellMargin(self.get_corners_for_margin(2), self.cell_id, 2),
+                CellMargin.CellMargin(self.get_corners_for_margin(3), self.cell_id, 3)
+            ]
+
 
     # gets the origin of a smaller square inside the cell - with a given margin to the bounding cells walls
     def get_inner_square_origin(self):

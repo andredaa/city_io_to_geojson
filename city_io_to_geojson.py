@@ -23,10 +23,14 @@ def get_design_area_shape():
 def remove_cells_outside_design_area(grid_of_cells):
     design_area = get_design_area_shape()
     design_grid = []
+    interactive_id = 0
 
     for cell in grid_of_cells:
         if design_area.intersects(shape(cell.outer_cell.get_the_geom())):
+            cell.set_interactive_id(interactive_id)
             design_grid.append(cell)
+            interactive_id += 1
+
 
     return design_grid
 
@@ -100,7 +104,7 @@ def create_geo_json(grid_of_cells):
         inner_cell_coordinates = []
         for point in inner_cell.get_polygon_coord():
             inner_cell_coordinates.append(point)
-        cell_content = get_cell_content(inner_cell_coordinates, cell.get_cell_id())
+        cell_content = get_cell_content(inner_cell_coordinates, cell.get_cell_id(), cell.interactive_id)
         geo_json['features'].append(cell_content)
 
         # add margins
@@ -112,14 +116,14 @@ def create_geo_json(grid_of_cells):
                 margin_coordinates = []
                 for point in margin.get_polygon_coord():
                     margin_coordinates.append(point)
-                margin_content = get_cell_content(margin_coordinates, cell.get_cell_id(),
+                margin_content = get_cell_content(margin_coordinates, cell.get_cell_id(), cell.interactive_id,
                                                   margin.get_margin_id())
                 geo_json['features'].append(margin_content)
 
     return geo_json
 
 
-def get_cell_content(coordinates, cell_id, margin_id=None):
+def get_cell_content(coordinates, cell_id, interactive_id, margin_id=None):
     cell_content = {
         "type": "Feature",
         "geometry": {
@@ -127,10 +131,10 @@ def get_cell_content(coordinates, cell_id, margin_id=None):
             "coordinates": [coordinates]
         },
         "properties": {
-            "interactive_id": cell_id,
+            "cell_id": cell_id,
+            "interactive_id": interactive_id,
             "interactive": True
         },
-        "cell_id": cell_id
     }
 
     if margin_id is not None:

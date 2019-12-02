@@ -21,6 +21,7 @@ class GridCell:
         self.outer_cell = self.create_outer_cell()
         self.inner_cell = self.create_inner_cell()
         self.margins = self.create_margins()
+        self.interactive_id = None
 
 # defining class getters
     def get_origin(self):
@@ -37,6 +38,9 @@ class GridCell:
 
     def get_cell_id(self):
         return self.cell_id
+
+    def set_interactive_id(self, interactive_id):
+        self.interactive_id = interactive_id
 
     def get_table_rotation(self):
         return self.table_rotation

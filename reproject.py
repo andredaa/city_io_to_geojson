@@ -10,11 +10,6 @@ global_epsg = config['SETTINGS']['OUTPUT_EPSG']
 local_epsg = config['SETTINGS']['LOCAL_EPSG']
 
 
-def open_geojson(path):
-    with open(path) as f:
-        return json.load(f)
-
-
 # gets the path for the reprojected json
 def get_projected_json_path(original_json_path):
     if original_json_path.endswith('.geojson'):

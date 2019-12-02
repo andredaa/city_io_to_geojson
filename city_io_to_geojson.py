@@ -6,23 +6,40 @@ import json
 import configparser
 import reproject
 import random
+import os
+from shapely.geometry import shape, Point
 
-def get_data_from_config():
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-    create_table()
 
-    return json.load('./resulting_jsons/geojson_' + config['SETTINGS']['LOCAL_EPSG'] + '.json')
+# returns a geojson containing the designable area of the project site
+def get_design_area():
+    cwd = os.path.dirname(os.path.realpath(__file__))
+    with open(cwd + '/designable_area.json') as f:
+        geojson = json.load(f)
+        return shape(geojson['features'][0]['geometry'])
 
 
 # collects the table specs and creates geojsons in local and global projections
 # geojsons containing coordinates are created for the outer_cell, inner_cell and margins of each grid_cell
+def remove_cells_outside_design_area(grid_of_cells):
+    design_area = get_design_area()
+    design_grid = []
+
+    for cell in grid_of_cells:
+        for point_coords in cell.outer_cell.get_polygon_coord():
+            if design_area.contains(Point(point_coords)):
+                design_grid.append(cell)
+
+    return design_grid
+
+
 def create_table():
     # dynamic input data from designer
     table = CityScopeTable.CityScopeTable()
     grid_of_cells = create_grid_of_cells(table)
 
-    geo_json_local_projection = create_geo_json(grid_of_cells)
+    design_grid = remove_cells_outside_design_area(grid_of_cells)
+
+    geo_json_local_projection = create_geo_json(design_grid)
 
     # debugging only: save local geojson
     # with open('./resulting_jsons/geojson_' + 'local_projection' + '.json', 'wb') as f:

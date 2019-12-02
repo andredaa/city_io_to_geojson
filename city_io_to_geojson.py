@@ -10,8 +10,8 @@ import os
 from shapely.geometry import shape, Point
 
 
-# returns a geojson containing the designable area of the project site
-def get_design_area():
+# returns a shapely object containing a MultiPolygon in form of the designable area of the project site
+def get_design_area_shape():
     cwd = os.path.dirname(os.path.realpath(__file__))
     with open(cwd + '/designable_area.json') as f:
         geojson = json.load(f)
@@ -21,7 +21,7 @@ def get_design_area():
 # collects the table specs and creates geojsons in local and global projections
 # geojsons containing coordinates are created for the outer_cell, inner_cell and margins of each grid_cell
 def remove_cells_outside_design_area(grid_of_cells):
-    design_area = get_design_area()
+    design_area = get_design_area_shape()
     design_grid = []
 
     for cell in grid_of_cells:
@@ -91,7 +91,6 @@ def create_geo_json(grid_of_cells):
 
     geo_json = {
         "type": "FeatureCollection",
-        # todo put crs crs
         "features": [
         ]
     }
@@ -112,14 +111,14 @@ def create_geo_json(grid_of_cells):
                 margin_coordinates = []
                 for point in margin.get_polygon_coord():
                     margin_coordinates.append(point)
-                margin_content = get_cell_content(margin_coordinates, cell.get_cell_id(), cell.get_table_rotation(),
+                margin_content = get_cell_content(margin_coordinates, cell.get_cell_id(),
                                                   margin.get_margin_id())
                 geo_json['features'].append(margin_content)
 
     return geo_json
 
 
-def get_cell_content(coordinates, cell_id, rotation, margin_id=None):
+def get_cell_content(coordinates, cell_id, margin_id=None):
     cell_content = {
         "type": "Feature",
         "geometry": {
@@ -127,12 +126,8 @@ def get_cell_content(coordinates, cell_id, rotation, margin_id=None):
             "coordinates": [coordinates]
         },
         "properties": {
-            "id": cell_id,
-            "type": 0,
-            "rotation": rotation,
-            "color": '#FFFFFF',
-            "base_height": 0,
-            "height": 0
+            "interactive_id": cell_id,
+            "interactive": True
         },
         "cell_id": cell_id
     }

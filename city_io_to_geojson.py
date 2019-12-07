@@ -20,7 +20,8 @@ def get_design_area_shape():
 
 # collects the table specs and creates geojsons in local and global projections
 # geojsons containing coordinates are created for the outer_cell, inner_cell and margins of each grid_cell
-def remove_cells_outside_design_area(grid_of_cells):
+# sets interactive_id for cells inside design area
+def set_interactive_cell_id(grid_of_cells):
     design_area = get_design_area_shape()
     design_grid = []
     interactive_id = 0
@@ -32,17 +33,14 @@ def remove_cells_outside_design_area(grid_of_cells):
             interactive_id += 1
 
 
-    return design_grid
-
-
 def create_table():
     # dynamic input data from designer
     table = CityScopeTable.CityScopeTable()
     grid_of_cells = create_grid_of_cells(table)
 
-    design_grid = remove_cells_outside_design_area(grid_of_cells)
+    set_interactive_cell_id(grid_of_cells)
 
-    geo_json_local_projection = create_geo_json(design_grid)
+    geo_json_local_projection = create_geo_json(grid_of_cells)
 
     # debugging only: save local geojson
     # with open('./resulting_jsons/geojson_' + 'local_projection' + '.json', 'wb') as f:
@@ -124,6 +122,8 @@ def create_geo_json(grid_of_cells):
 
 
 def get_cell_content(coordinates, cell_id, interactive_id, margin_id=None):
+
+
     cell_content = {
         "type": "Feature",
         "geometry": {
@@ -133,7 +133,7 @@ def get_cell_content(coordinates, cell_id, interactive_id, margin_id=None):
         "properties": {
             "cell_id": cell_id,
             "interactive_id": interactive_id,
-            "interactive": True
+            "interactive": (interactive_id is not None)
         },
     }
 

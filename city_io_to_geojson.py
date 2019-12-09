@@ -131,9 +131,13 @@ def get_cell_content(coordinates, cell_id, interactive_id, margin_id=None):
             "coordinates": [coordinates]
         },
         "properties": {
+            "type": 0,
+            "height": 10,
+            "color": "#A9A9A9",
             "interactive_id": interactive_id,
             "interactive": (interactive_id is not None)
         },
+        "id": cell_id
     }
 
     if margin_id is not None:

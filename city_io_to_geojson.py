@@ -48,7 +48,7 @@ def create_table():
 
     # save reprojected geojson
     geo_json_global_projection = reproject.reproject_geojson_local_to_global(geo_json_local_projection)
-    with open('./resulting_jsons/geojson_' + 'global_projection' + '.json', 'w', newline='') as f:
+    with open('./resulting_jsons/geojson_' + 'grid' + '.json', 'w', newline='') as f:
         json.dump(geo_json_global_projection, f) # , sort_keys=True, indent=4)
 
 
@@ -96,27 +96,28 @@ def create_geo_json(grid_of_cells):
         ]
     }
     for cell in grid_of_cells:
-        print(cell.cell_id)
-        inner_cell = cell.get_inner_cell()
-        # add inner cells
-        inner_cell_coordinates = []
-        for point in inner_cell.get_polygon_coord():
-            inner_cell_coordinates.append(point)
-        cell_content = get_cell_content(inner_cell_coordinates, cell.get_cell_id(), cell.interactive_id)
-        geo_json['features'].append(cell_content)
+        if cell.interactive_id is not None:
+            print(cell.cell_id)
+            inner_cell = cell.get_inner_cell()
+            # add inner cells
+            inner_cell_coordinates = []
+            for point in inner_cell.get_polygon_coord():
+                inner_cell_coordinates.append(point)
+            cell_content = get_cell_content(inner_cell_coordinates, cell.get_cell_id(), cell.interactive_id)
+            geo_json['features'].append(cell_content)
 
-        # add margins
-        # if margins
-        if cell.cell_margin > 0:
-            print("margin")
-            margins = cell.get_margins()
-            for margin in margins:
-                margin_coordinates = []
-                for point in margin.get_polygon_coord():
-                    margin_coordinates.append(point)
-                margin_content = get_cell_content(margin_coordinates, cell.get_cell_id(), cell.interactive_id,
-                                                  margin.get_margin_id())
-                geo_json['features'].append(margin_content)
+            # add margins
+            # if margins
+            if cell.cell_margin > 0:
+                print("margin")
+                margins = cell.get_margins()
+                for margin in margins:
+                    margin_coordinates = []
+                    for point in margin.get_polygon_coord():
+                        margin_coordinates.append(point)
+                    margin_content = get_cell_content(margin_coordinates, cell.get_cell_id(), cell.interactive_id,
+                                                      margin.get_margin_id())
+                    geo_json['features'].append(margin_content)
 
     return geo_json
 
@@ -134,8 +135,8 @@ def get_cell_content(coordinates, cell_id, interactive_id, margin_id=None):
             "type": 0,
             "height": 10,
             "color": "#A9A9A9",
-            "interactive_id": interactive_id,
-            "interactive": (interactive_id is not None)
+            #"interactive_id": interactive_id,
+            #"interactive": (interactive_id is not None)
         },
         "id": cell_id
     }

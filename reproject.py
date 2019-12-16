@@ -10,11 +10,6 @@ global_epsg = config['SETTINGS']['OUTPUT_EPSG']
 local_epsg = config['SETTINGS']['LOCAL_EPSG']
 
 
-def open_geojson(path):
-    with open(path) as f:
-        return json.load(f)
-
-
 # gets the path for the reprojected json
 def get_projected_json_path(original_json_path):
     if original_json_path.endswith('.geojson'):
@@ -22,43 +17,30 @@ def get_projected_json_path(original_json_path):
     raise NameError('Invalid path to original json. Must end on ".geojson"')
 
 
-# reprojects a point
-def reproject_point(current_epsg, new_epsg, point):
-    current = pyproj.Proj("+init=" + current_epsg)
-    new = pyproj.Proj("+init=" + new_epsg)
-    projected_x, projected_y = pyproj.transform(current, new, point[0], point[1])
+# receives a geojson, reprojects it and returns the reprojected geojson
+def reproject_geojson_local_to_global(local_geojson):
+    local_prj = pyproj.Proj("+init=" + local_epsg)
+    global_prj = pyproj.Proj("+init=" + global_epsg)
 
-    return projected_x, projected_y
+    features = local_geojson['features']
+    feature_length = len(features[0]['geometry']['coordinates'][0])
 
-# reprojects a point to WGS84
-def reproject_point_local_to_global(point):
-    projected_x, projected_y = reproject_point(local_epsg, global_epsg, point)
-
-    return projected_x, projected_y
-
-
-# reprojects a point to local hamburg epsg
-def reproject_point_global_to_local(point):
-    projected_x, projected_y = reproject_point(global_epsg, local_epsg, point)
-
-    return projected_x, projected_y
-
-
-def reproject_geojson_local_to_global(geojson):
-    features = geojson['features']
-
+    # creates a list of coordinates used in the local_geojson
+    local_coords = []
     for feature in features:
-        coordinates = feature['geometry']['coordinates']
-        for point in coordinates[0]:
-            projected_x, projected_y = reproject_point_local_to_global(point)
+        coordinates = feature['geometry']['coordinates'][0]
+        for point in coordinates:
+            local_coords.append((point[0], point[1]))
+    
+    # reprojects local coords and updates features with reprojected coords
+    point_counter = 0
+    for gc in pyproj.itransform(local_prj, global_prj, local_coords):
+        feature_num = int(point_counter / feature_length)
+        features[feature_num]['geometry']['coordinates'][0][point_counter % feature_length] = gc
 
-            # replace coordinates with projected ones in long, lat format
-            point[0] = projected_x
-            point[1] = projected_y
+        point_counter += 1
 
     projected_features = features
-    geojson['features'] = projected_features
-    #print(geojson)
+    local_geojson['features'] = projected_features
 
-    return geojson
-
+    return local_geojson

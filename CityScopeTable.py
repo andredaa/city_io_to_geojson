@@ -94,39 +94,40 @@ class CityScopeTable:
 
     # logic from https://github.com/doorleyr/grid_geojson/commit/df321e7e5fe1cf389a24fcde57cadee8591f1c92#diff-a95911d0e1834f67b5fab2dca32cc329
     def calculate_rotation_metric_crs(self):
-        earth_radius_m = 6.371e6
-        origin = self.start_cell_origin
-        bearing = (90 - self.table_rotation_lat_lon + 360) % 360
-        projection = pyproj.Proj("+init=" + self.local_epsg)
-        wgs = pyproj.Proj("+init=" + self.origin_epsg)  # todo rename as global epsg
-        cell_size = self.table_cell_size
-        ratio_grid_earth = (cell_size * self.table_column_count) / earth_radius_m
-        origin_latitude_rad = self.deg_to_rad(origin.y)
-        origin_longitude_rad = self.deg_to_rad(origin.x)
-        bearing_rad = self.deg_to_rad(bearing)
-
-        # calculate position of the top right corner of the grid
-        top_right_latitude_rad = math.asin(math.sin(origin_latitude_rad) * math.cos(ratio_grid_earth)
-                                           + (math.cos(origin_latitude_rad)
-                                              * math.sin(ratio_grid_earth)
-                                              * math.cos(bearing_rad)))
-
-        top_right_longitude_rad = origin_longitude_rad + math.atan2(
-            math.sin(bearing_rad) * math.sin(ratio_grid_earth) * math.cos(origin_latitude_rad),
-            math.cos(ratio_grid_earth) - math.sin(origin_latitude_rad) * math.sin(top_right_latitude_rad)
-        )
-        # convert longitude latitude from rad to degree
-        top_right_lon_lat = {'lon': self.rad_to_deg(top_right_longitude_rad),
-                             'lat': self.rad_to_deg(top_right_latitude_rad)}
-
-        # reprojected coordinates of the 2 points into local, spatial system
-        top_left_xy = pyproj.transform(wgs, projection, origin.x,
-                                       origin.y)
-        top_right_xy = pyproj.transform(wgs, projection, top_right_lon_lat['lon'],
-                                        top_right_lon_lat['lat'])
-        # now we have the top two points in a spatial system,
-        # we can calculate the rest of the points
-        dydx = (top_right_xy[1] - top_left_xy[1]) / (top_right_xy[0] - top_left_xy[0])
-        theta = math.atan((dydx))
-
-        return self.rad_to_deg(theta)
+        return 34
+        # earth_radius_m = 6.371e6
+        # origin = self.start_cell_origin
+        # bearing = (90 - self.table_rotation_lat_lon + 360) % 360
+        # projection = pyproj.Proj("+init=" + self.local_epsg)
+        # wgs = pyproj.Proj("+init=" + self.origin_epsg)  # todo rename as global epsg
+        # cell_size = self.table_cell_size
+        # ratio_grid_earth = (cell_size * self.table_column_count) / earth_radius_m
+        # origin_latitude_rad = self.deg_to_rad(origin.y)
+        # origin_longitude_rad = self.deg_to_rad(origin.x)
+        # bearing_rad = self.deg_to_rad(bearing)
+        #
+        # # calculate position of the top right corner of the grid
+        # top_right_latitude_rad = math.asin(math.sin(origin_latitude_rad) * math.cos(ratio_grid_earth)
+        #                                    + (math.cos(origin_latitude_rad)
+        #                                       * math.sin(ratio_grid_earth)
+        #                                       * math.cos(bearing_rad)))
+        #
+        # top_right_longitude_rad = origin_longitude_rad + math.atan2(
+        #     math.sin(bearing_rad) * math.sin(ratio_grid_earth) * math.cos(origin_latitude_rad),
+        #     math.cos(ratio_grid_earth) - math.sin(origin_latitude_rad) * math.sin(top_right_latitude_rad)
+        # )
+        # # convert longitude latitude from rad to degree
+        # top_right_lon_lat = {'lon': self.rad_to_deg(top_right_longitude_rad),
+        #                      'lat': self.rad_to_deg(top_right_latitude_rad)}
+        #
+        # # reprojected coordinates of the 2 points into local, spatial system
+        # top_left_xy = pyproj.transform(wgs, projection, origin.x,
+        #                                origin.y)
+        # top_right_xy = pyproj.transform(wgs, projection, top_right_lon_lat['lon'],
+        #                                 top_right_lon_lat['lat'])
+        # # now we have the top two points in a spatial system,
+        # # we can calculate the rest of the points
+        # dydx = (top_right_xy[1] - top_left_xy[1]) / (top_right_xy[0] - top_left_xy[0])
+        # theta = math.atan((dydx))
+        #
+        # return self.rad_to_deg(theta)

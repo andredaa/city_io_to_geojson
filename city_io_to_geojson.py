@@ -96,7 +96,8 @@ def create_geo_json(grid_of_cells):
         ]
     }
     for cell in grid_of_cells:
-        if cell.interactive_id is not None:
+        #if cell.interactive_id is not None:
+        if True:
             print(cell.cell_id)
             inner_cell = cell.get_inner_cell()
             # add inner cells
@@ -135,8 +136,8 @@ def get_cell_content(coordinates, cell_id, interactive_id, margin_id=None):
             "type": 0,
             "height": 10,
             "color": "#A9A9A9",
-            #"interactive_id": interactive_id,
-            #"interactive": (interactive_id is not None)
+            "interactive_id": interactive_id,
+            "interactive": (interactive_id is not None)
         },
         "id": cell_id
     }
